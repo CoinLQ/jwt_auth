@@ -4,10 +4,8 @@ from django.conf import settings
 from rest_framework.settings import APISettings
 
 
-# #只要一个月内使用一次app，就不用重新登录，使用auth刷新最长可以一年不重新登录
-
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
         'jwt_auth.serializers.jwt_response_payload_handler',
     'JWT_PAYLOAD_HANDLER': 'jwt_auth.serializers.jwt_payload_handler',
 }

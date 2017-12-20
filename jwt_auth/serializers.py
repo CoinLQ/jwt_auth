@@ -73,7 +73,7 @@ class StaffSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Staff
-        fields = ('email', 'last_login', 'is_active', 'password')
+        fields = ('email', 'date_joined', 'last_login', 'is_active', 'password')
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ('created_at', 'updated_at', 'is_admin', 'last_login', 'date_joined')
 
