@@ -1,4 +1,5 @@
 # coding: utf-8
+import uuid
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
@@ -28,8 +29,9 @@ class StaffManager(BaseUserManager):
 
 
 class Staff(AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(u"用户名", max_length=24, default="")
-    email = models.EmailField(u"邮件", primary_key=True, max_length=255, unique=True)
+    email = models.EmailField(u"邮件", primary_key=True, max_length=255, unique=True, db_index=True)
     is_active = models.BooleanField("是否激活", default=True)
     is_admin = models.BooleanField(default=False)
     introduce_by = models.CharField(u"推荐由", max_length=64, default="")
@@ -63,5 +65,5 @@ class Staff(AbstractBaseUser):
         # The user is identified by their email address
         return self.email
 
-    def get_username(self):
-        return self.email
+    def fake_username(self):
+        return self.email.split('@')[0]
