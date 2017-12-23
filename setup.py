@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='jwt_auth',
-      version='0.2.4',
+      version='0.2.5',
       description='The JWT AUTH API',
       url='https://github.com/CoinLQ/jwt_auth',
       author='Xiandian',
