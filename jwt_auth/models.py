@@ -42,7 +42,7 @@ class Staff(AbstractBaseUser):
     USERNAME_FIELD = 'email'
 
     def is_staff(self):
-        return self.is_admin
+        return not self.is_admin
 
     def __str__(self):
         return self.email

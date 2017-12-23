@@ -1,9 +1,8 @@
 # Include the license file
 include LICENSE.txt
+include setup.cfg
+include setup.py
+recursive-include jwt_auth/migrations *
+recursive-include jwt_auth/tests *
 
-graft jwt_auth/migrations
-graft jwt_auth/tests
-
-# Include the data files
-recursive-include data *
-
+global-exclude *.pyc __pycache__ .keep
