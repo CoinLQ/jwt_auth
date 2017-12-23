@@ -2,9 +2,12 @@ import jwt
 from django.conf import settings
 from rest_framework import authentication, exceptions
 from .models import Staff
+from rest_framework.authentication import (
+    BaseAuthentication, get_authorization_header
+)
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-
-class JWTAuthentication(authentication.BaseAuthentication):
+class JWTAuthentication(BaseAuthentication):
     authentication_header_prefix = 'Token'
 
     def authenticate(self, request):
@@ -33,7 +36,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         # `auth_header` should be an array with two elements: 1) the name of
         # the authentication header (in this case, "Token") and 2) the JWT
         # that we should authenticate against.
-        auth_header = authentication.get_authorization_header(request).split()
+        auth_header = get_authorization_header(request).split()
         auth_header_prefix = self.authentication_header_prefix.lower()
 
         if not auth_header:
@@ -77,9 +80,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
         except:
             msg = 'Invalid authentication. Could not decode token.'
             raise exceptions.AuthenticationFailed(msg)
-
+        import pdb;pdb.set_trace()
         try:
-            staff = Staff.objects.get(pk=payload['id'])
+            staff = Staff.objects.get(email=payload['email'])
         except Staff.DoesNotExist:
             msg = 'No staff matching this token was found.'
             raise exceptions.AuthenticationFailed(msg)
