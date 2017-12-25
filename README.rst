@@ -18,6 +18,13 @@ Don't change default user authentication.
                 'jwt_auth.authentication.JWTAuthentication',
             )
         }
+
+        # optional
+        JWT_AUTH = {
+            'JWT_RESPONSE_PAYLOAD_HANDLER':
+                'jwt_auth.serializers.jwt_response_payload_handler',
+            'JWT_PAYLOAD_HANDLER': 'jwt_auth.serializers.jwt_payload_handler',
+        }
 ```
 @urls.py
 ```

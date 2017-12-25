@@ -80,7 +80,6 @@ class JWTAuthentication(BaseAuthentication):
         except:
             msg = 'Invalid authentication. Could not decode token.'
             raise exceptions.AuthenticationFailed(msg)
-        import pdb;pdb.set_trace()
         try:
             staff = Staff.objects.get(email=payload['email'])
         except Staff.DoesNotExist:
