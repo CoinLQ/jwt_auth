@@ -31,7 +31,6 @@ class JWTAuthentication(BaseAuthentication):
                             exception and let Django REST Framework
                             handle the rest.
         """
-        request.user = None
 
         # `auth_header` should be an array with two elements: 1) the name of
         # the authentication header (in this case, "Token") and 2) the JWT
