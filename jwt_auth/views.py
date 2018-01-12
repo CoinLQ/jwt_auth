@@ -1,8 +1,11 @@
 from rest_framework import viewsets, permissions, mixins, generics
 from .models import Staff
+from .permissions import IndenticalUserOrReadOnly
+from . import permissions as user_permissions
 from .serializers import StaffSerializer, JSONWebTokenSerializer, RefreshJSONWebTokenSerializer
 from rest_framework_jwt.views import JSONWebTokenAPIView
-
+from rest_framework.response import Response
+from rest_framework.decorators import list_route
 
 class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Staff.objects.all()
@@ -13,10 +16,22 @@ class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
         return self.create(request, *args, **kwargs)
 
 
-class StaffViewSet(viewsets.ModelViewSet):
+class StaffViewSet(mixins.ListModelMixin,
+                   mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
+
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (user_permissions.IndenticalUserOrReadOnly, )
+
+    @list_route(methods=['get'], url_path='exist_email', permission_classes=[IndenticalUserOrReadOnly])
+    def email_exists(self, request):
+        email = request.GET['email']
+        staff = Staff.objects.filter(email__iregex=r'^' + email +"$").first()
+        if not staff:
+            return Response({"status": 0})
+        else:
+            return Response({"status": -1, "msg": 'Email existed'})
 
 
 class ObtainJSONWebToken(JSONWebTokenAPIView):
