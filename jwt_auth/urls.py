@@ -6,6 +6,7 @@ from .views import StaffViewSet
 from rest_framework.routers import DefaultRouter
 from .views import obtain_jwt_token, refresh_jwt_token, register_user
 
+app_name ='jwt_auth'
 
 router = DefaultRouter()
 router.register(r'staff', StaffViewSet)
