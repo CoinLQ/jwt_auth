@@ -66,3 +66,11 @@ class Staff(AbstractBaseUser):
 
     def fake_username(self):
         return self.email.split('@')[0]
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_authenticated(self):
+        return True
