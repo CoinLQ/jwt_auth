@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('username', models.CharField(default='', max_length=24, verbose_name='用户名')),
                 ('email', models.EmailField(db_index=True, max_length=255, unique=True, verbose_name='邮件')),
                 ('is_active', models.BooleanField(default=True, verbose_name='是否激活')),
