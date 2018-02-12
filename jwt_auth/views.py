@@ -33,6 +33,12 @@ class StaffViewSet(mixins.ListModelMixin,
         else:
             return Response({"status": -1, "msg": 'Email existed'})
 
+    @list_route(methods=['get'], url_path='my_roles', permission_classes=[IndenticalUserOrReadOnly])
+    def roles(self, request):
+        return {
+            'staff': StaffSerializer(staff, context={'request': request}).data
+        }
+
 
 class ObtainJSONWebToken(JSONWebTokenAPIView):
     """
