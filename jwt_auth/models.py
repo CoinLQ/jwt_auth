@@ -124,8 +124,17 @@ class Staff(AbstractBaseUser):
     def fake_username(self):
         return self.email.split('@')[0]
 
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_authenticated(self):
+        return True
+
     class Meta:
         verbose_name_plural = verbose_name = u'活动用户'
+
 
 class Permission(models.Model):
     name = models.CharField(u"名称", max_length=24, default="")
