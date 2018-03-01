@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from .models import Staff
+from .models import Staff, Permission, Resource, Menu, Role
 
 
 class StaffCreationForm(forms.ModelForm):
@@ -38,7 +38,7 @@ class StaffChangeForm(forms.ModelForm):
 
     class Meta:
         model = Staff
-        fields = ('email', 'password', 'username')
+        fields = ('email', 'password', 'username', 'roles')
 
     def clean_password(self):
         return self.initial['password']
@@ -53,7 +53,7 @@ class StaffAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
         ('Personal info', {'fields': ('last_login',)}),
-        ('Permissions', {'fields': ('is_admin',)}),
+        ('Permissions', {'fields': ('is_admin', 'roles')}),
     )
     add_fieldsets = (
         (None, {
@@ -69,3 +69,27 @@ class StaffAdmin(BaseUserAdmin):
 # Now register the new UserAdmin
 admin.site.register(Staff, StaffAdmin)
 admin.site.unregister(Group)
+
+@admin.register(Permission)
+class PermissionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'menu', 'get_roles', 'is_active')
+    fields = ('is_active', 'roles')
+
+    def get_roles(self, obj):
+        return ",".join([r.name for r in obj.roles.all()])
+
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+@admin.register(Menu)
+class MenuAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'menu_paths', 'is_active')
+    fields = ('menu_paths', 'is_active' )
+
+

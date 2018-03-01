@@ -85,8 +85,9 @@ class Staff(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
 
+    @property
     def is_staff(self):
-        return not self.is_admin
+        return self.is_active
 
     def __str__(self):
         return self.email
