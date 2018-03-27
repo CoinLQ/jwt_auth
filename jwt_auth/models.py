@@ -7,7 +7,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User, Group
 from django.contrib.postgres.fields import JSONField
 from functools import reduce
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class StaffManager(BaseUserManager):
 
@@ -136,6 +137,13 @@ class Staff(AbstractBaseUser):
     class Meta:
         verbose_name_plural = verbose_name = u'活动用户'
 
+
+@receiver(post_save, sender=Staff)
+def assign_default_jiaodui_role(sender, instance, **kwargs):
+    if len(instance.roles.all()) == 0:
+        instance.username = instance.email.split('@')[0] 
+        instance.roles.set(Role.objects.filter(pk=1))
+        instance.save(update_fields=['username'])
 
 class Permission(models.Model):
     name = models.CharField(u"名称", max_length=24, default="")
