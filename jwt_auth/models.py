@@ -78,8 +78,9 @@ class Staff(AbstractBaseUser):
     username = models.CharField(u"用户名", max_length=24, default="")
     email = models.EmailField(u"邮件", max_length=255, unique=True, db_index=True)
     is_active = models.BooleanField("是否激活", default=True)
+    is_superuser = models.BooleanField("是否是超级用户", default=False)
     is_admin = models.BooleanField("是否管理员", default=False)
-    introduce_by = models.CharField(u"推荐由", max_length=64, default="")
+    introduce_by = models.CharField(u"推荐由", max_length=64, default="", blank=True)
     date_joined = models.DateTimeField(u'创建时间', auto_now=True)
     roles = models.ManyToManyField(Role, verbose_name=u'角色', blank=True)
     objects = StaffManager()
@@ -88,7 +89,7 @@ class Staff(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        return self.is_admin
+        return self.is_superuser
 
     def __str__(self):
         return self.email
@@ -140,9 +141,8 @@ class Staff(AbstractBaseUser):
 
 @receiver(post_save, sender=Staff)
 def assign_default_jiaodui_role(sender, instance, **kwargs):
-    if len(instance.roles.all()) == 0:
+    if not instance.username:
         instance.username = instance.email.split('@')[0] 
-        instance.roles.set(Role.objects.filter(pk=1))
         instance.save(update_fields=['username'])
 
 class Permission(models.Model):
