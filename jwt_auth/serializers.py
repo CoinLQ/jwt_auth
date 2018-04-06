@@ -73,12 +73,13 @@ class StaffSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Staff
-        fields = ('email', 'date_joined', 'last_login', 'is_active', 'is_admin', 'password', 'id', 'menus')
+        fields = ('username','email', 'date_joined', 'last_login', 'is_active', 'is_admin', 'password', 'id', 'menus')
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ('created_at', 'updated_at', 'is_admin', 'last_login', 'date_joined', 'id')
 
+    # TODO
     def create(self, validated_data):
-        staff = Staff(email=validated_data['email'])
+        staff = Staff(email=validated_data['email'], username=validated_data['username'])
         staff.set_password(validated_data['password'])
         staff.save()
         return staff
