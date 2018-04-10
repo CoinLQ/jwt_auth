@@ -33,6 +33,15 @@ class StaffViewSet(mixins.ListModelMixin,
         else:
             return Response({"status": -1, "msg": 'Email existed'})
 
+    @list_route(methods=['get'], url_path='exist_username', permission_classes=[IndenticalUserOrReadOnly])
+    def username_exists(self, request):
+        username = request.GET['username']
+        staff = Staff.objects.filter(username__iregex=r'^' + username +"$").first()
+        if not staff:
+            return Response({"status": 0})
+        else:
+            return Response({"status": -1, "msg": 'Username existed'})
+
     @list_route(methods=['get'], url_path='my_roles', permission_classes=[IndenticalUserOrReadOnly])
     def roles(self, request):
         return {

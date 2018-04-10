@@ -58,7 +58,7 @@ class StaffAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'last_login', 'password1', 'password2')}
+            'fields': ('username','email', 'last_login', 'password1', 'password2')}
          ),
     )
     search_fields = ('email',)

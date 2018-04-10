@@ -12,7 +12,7 @@ from django.dispatch import receiver
 
 class StaffManager(BaseUserManager):
 
-    def create_staff(self, email, password):
+    def create_staff(self,username, email, password):
         if not email:
             raise ValueError('邮箱地址不能为空')
         if not password:
@@ -86,7 +86,7 @@ class Staff(AbstractBaseUser):
     objects = StaffManager()
 
     USERNAME_FIELD = 'email'
-
+    # USERNAME_FIELD = 'username'
     @property
     def is_staff(self):
         return self.is_superuser
@@ -125,7 +125,8 @@ class Staff(AbstractBaseUser):
         return self.email
 
     def fake_username(self):
-        return self.email.split('@')[0]
+        # return self.email.split('@')[0]
+        return self.username
 
     @property
     def is_anonymous(self):
