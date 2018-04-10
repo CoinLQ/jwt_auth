@@ -79,12 +79,20 @@ class StaffSerializer(serializers.ModelSerializer):
 
     # TODO
     def create(self, validated_data):
-        staff = Staff(email=validated_data['email'], username=validated_data['username'])
-        staff.set_password(validated_data['password'])
-        staff.save()
-        return staff
+        if self.check_url(validated_data):
+            staff = Staff(email=validated_data['email'], username=validated_data['username'])
+            staff.set_password(validated_data['password'])
+            staff.save()
+            return staff
+        else:
+            return 'error'
 
-
+    def check_url(self,data):
+        # import requests
+        # baseURL = 'http://bbs.lqdzj.cn'
+        # url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
+        # response = requests.post(url, data=data)
+        return True
 
 class JSONWebTokenSerializer(serializers.Serializer):
     """
