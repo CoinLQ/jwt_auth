@@ -5,6 +5,7 @@ from . import permissions as user_permissions
 from .serializers import StaffSerializer, JSONWebTokenSerializer, RefreshJSONWebTokenSerializer
 from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import list_route
 
 class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
@@ -13,7 +14,11 @@ class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = StaffSerializer
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        try:
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            return Response({"status": -1, "msg": e.args[0]}, status=status.HTTP_406_NOT_ACCEPTABLE)  
+    
 
 
 class StaffViewSet(mixins.ListModelMixin,

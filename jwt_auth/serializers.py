@@ -5,6 +5,8 @@ from .models import Staff
 from django.utils import timezone
 import jwt
 import pytz
+import os,json
+from rest_framework.response import Response
 
 from calendar import timegm
 from datetime import datetime, timedelta
@@ -79,20 +81,28 @@ class StaffSerializer(serializers.ModelSerializer):
 
     # TODO
     def create(self, validated_data):
-        if self.check_url(validated_data):
+        resDic = self.register_discourse(validated_data)
+        if resDic['success'] == True:
             staff = Staff(email=validated_data['email'], username=validated_data['username'])
             staff.set_password(validated_data['password'])
             staff.save()
+            print(resDic['success'])
             return staff
         else:
-            return 'error'
+            raise  Exception(resDic['message'])
 
-    def check_url(self,data):
-        # import requests
-        # baseURL = 'http://bbs.lqdzj.cn'
-        # url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
-        # response = requests.post(url, data=data)
-        return True
+    def register_discourse(self,data):
+        import requests
+        baseURL = 'http://bbs-local.lqdzj.cn' 
+        
+        url = baseURL + '/users?api_username=' + os.environ.get('DISCOURSE_API_USERNAME') + '&api_key='+ os.environ.get('DISCOURSE_API_KEY');
+        data['active'] = True
+        data['approved'] = True
+        
+        response = requests.post(url, data=data)
+        print(response.text)
+        resDic = json.loads(response.text)
+        return resDic
 
 class JSONWebTokenSerializer(serializers.Serializer):
     """
