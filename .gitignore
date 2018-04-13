@@ -10,3 +10,5 @@
 .cache
 
 build
+
+/*.yarn-error.log

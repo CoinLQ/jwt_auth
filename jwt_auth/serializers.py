@@ -92,8 +92,8 @@ class StaffSerializer(serializers.ModelSerializer):
 
     def register_discourse(self,data):
         import requests
-        baseURL = 'http://bbs-local.lqdzj.cn' 
-        url = baseURL + '/users?api_username=' + os.environ.get('DISCOURSE_API_USERNAME') + '&api_key='+ os.environ.get('DISCOURSE_API_KEY');
+        baseURL = os.environ.get('DISCOURSE_API_HOST') 
+        url = baseURL + '/users?api_username=' + os.environ.get('DISCOURSE_API_USERNAME','admin_lqdzj') + '&api_key='+ os.environ.get('DISCOURSE_API_KEY');
         data['active'] = True
         data['approved'] = True
         response = requests.post(url, data=data)

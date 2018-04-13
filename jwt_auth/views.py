@@ -17,7 +17,7 @@ class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
         try:
             return self.create(request, *args, **kwargs)
         except Exception as e:
-            return Response({"status": -1, "msg": e.args[0]}, status=status.HTTP_406_NOT_ACCEPTABLE)  
+            return Response({"status": -1, "msg": str(e)}, status=status.HTTP_406_NOT_ACCEPTABLE)  
     
 
 
