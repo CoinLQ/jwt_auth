@@ -79,7 +79,7 @@ class StaffSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ('created_at', 'updated_at', 'is_admin', 'last_login', 'date_joined', 'id')
 
-    # TODO
+
     def create(self, validated_data):
         resDic = self.register_discourse(validated_data)
         if resDic['success'] == True:
@@ -92,7 +92,7 @@ class StaffSerializer(serializers.ModelSerializer):
 
     def register_discourse(self,data):
         import requests
-        baseURL = os.environ.get('DISCOURSE_API_HOST') 
+        baseURL ='http://' + os.environ.get('DISCOURSE_API_HOST') 
         url = baseURL + '/users?api_username=' + os.environ.get('DISCOURSE_API_USERNAME','admin_lqdzj') + '&api_key='+ os.environ.get('DISCOURSE_API_KEY');
         data['active'] = True
         data['approved'] = True
