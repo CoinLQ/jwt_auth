@@ -5,6 +5,8 @@ from .models import Staff
 from django.utils import timezone
 import jwt
 import pytz
+import os,json
+from rest_framework.response import Response
 
 from calendar import timegm
 from datetime import datetime, timedelta
@@ -77,22 +79,26 @@ class StaffSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ('created_at', 'updated_at', 'is_admin', 'last_login', 'date_joined', 'id')
 
-    # TODO
+
     def create(self, validated_data):
-        if self.check_url(validated_data):
+        resDic = self.register_discourse(validated_data)
+        if resDic['success'] == True:
             staff = Staff(email=validated_data['email'], username=validated_data['username'])
             staff.set_password(validated_data['password'])
             staff.save()
             return staff
         else:
-            return 'error'
+            raise  Exception(resDic['message'])
 
-    def check_url(self,data):
-        # import requests
-        # baseURL = 'http://bbs.lqdzj.cn'
-        # url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
-        # response = requests.post(url, data=data)
-        return True
+    def register_discourse(self,data):
+        import requests
+        baseURL ='http://' + os.environ.get('DISCOURSE_API_HOST') 
+        url = baseURL + '/users?api_username=' + os.environ.get('DISCOURSE_API_USERNAME','admin_lqdzj') + '&api_key='+ os.environ.get('DISCOURSE_API_KEY');
+        data['active'] = True
+        data['approved'] = True
+        response = requests.post(url, data=data)
+        resDic = json.loads(response.text)
+        return resDic
 
 class JSONWebTokenSerializer(serializers.Serializer):
     """
