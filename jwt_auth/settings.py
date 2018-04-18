@@ -11,7 +11,9 @@ JWT_AUTH = {
 }
 
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
-
+INSTALLED_APPS = [
+    'TripitakaPlatform'
+]
 
 DEFAULTS = {
     'JWT_ENCODE_HANDLER':
