@@ -54,9 +54,6 @@ class StaffViewSet(mixins.ListModelMixin,
         return {
             'staff': StaffSerializer(staff, context={'request': request}).data
         }
-    # @list_route(methods=['post'], url_path='api-vericode', permission_classes=[IndenticalUserOrReadOnly])    
-    # def email_vericode(self, request):
-    #     return Response({"status": -1, "msg": 'Failed'})
 
 
 class ObtainJSONWebToken(JSONWebTokenAPIView):
