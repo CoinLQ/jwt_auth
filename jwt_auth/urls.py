@@ -5,7 +5,7 @@ from django.conf.urls import url, include
 from .views import StaffViewSet
 from rest_framework.routers import DefaultRouter
 from .views import obtain_jwt_token, refresh_jwt_token, register_user,email_vericode,reset_password
-from jwt_auth import views
+
 app_name ='jwt_auth'
 
 router = DefaultRouter()

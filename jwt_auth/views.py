@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, mixins, generics
 from .models import Staff,EmailVerifycode
 from .permissions import IndenticalUserOrReadOnly
 from . import permissions as user_permissions
-from .serializers import StaffSerializer, JSONWebTokenSerializer, RefreshJSONWebTokenSerializer,EmailVerifycodeSerializer,ResetStaffSerializer
+from .serializers import StaffSerializer, JSONWebTokenSerializer, RefreshJSONWebTokenSerializer,EmailVerifycodeSerializer
 from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -54,9 +54,9 @@ class StaffViewSet(mixins.ListModelMixin,
         return {
             'staff': StaffSerializer(staff, context={'request': request}).data
         }
-    @list_route(methods=['post'], url_path='api-vericode', permission_classes=[IndenticalUserOrReadOnly])    
-    def email_vericode(self, request):
-        return Response({"status": -1, "msg": 'Failed'})
+    # @list_route(methods=['post'], url_path='api-vericode', permission_classes=[IndenticalUserOrReadOnly])    
+    # def email_vericode(self, request):
+    #     return Response({"status": -1, "msg": 'Failed'})
 
 
 class ObtainJSONWebToken(JSONWebTokenAPIView):
@@ -90,7 +90,7 @@ class EmailVerifycodeView(mixins.CreateModelMixin, generics.GenericAPIView):
 class ResetStaffView(mixins.CreateModelMixin,mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = Staff.objects.all()
     permission_classes = (permissions.AllowAny, )
-    serializer_class = ResetStaffSerializer 
+    serializer_class = StaffSerializer 
 
     def put(self, request, *args, **kwargs):
         params = request.data

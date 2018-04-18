@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from .models import Staff,EmailVerifycode
+from .models import Staff, EmailVerifycode
 from django.utils import timezone
 import jwt
 import pytz
@@ -98,18 +98,8 @@ class StaffSerializer(serializers.ModelSerializer):
         data['approved'] = True
         response = requests.post(url, data=data)
         resDic = json.loads(response.text)
-        print(resDic)
         return resDic
-    def reset_password(self,validated_data):
-        print('------')
-        resDic = validated_data
-        if True:
-            staff = Staff(email=validated_data['email'], username=validated_data['password'])
-            staff.set_password(validated_data['password'])
-            staff.save()
-            return staff
-        else:
-            raise  Exception(resDic['message'])
+    
 class JSONWebTokenSerializer(serializers.Serializer):
     """
     Serializer class used to validate a username and password.
@@ -264,6 +254,7 @@ class RefreshJSONWebTokenSerializer(VerificationBaseSerializer):
             'token': jwt_encode_handler(new_payload),
             'user': user
         }
+
 class EmailVerifycodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailVerifycode
@@ -273,13 +264,4 @@ class EmailVerifycodeSerializer(serializers.ModelSerializer):
         send_status = send_verifycode_email(email=validated_data['email'], send_type="forget")
         emailVerifycode = EmailVerifycode.objects.get(email=email)
         return emailVerifycode
-class ResetStaffSerializer(serializers.Serializer):
-    class Meta:
-        model = Staff
-        fields = '__all__'
-    def update(self,instance,validated_data):
-        print('--update--')
-        staff = Staff.objects.get(email=validated_data['email'])
-        staff.set_password(validated_data['password'])
-        staff.save()
-        return Response({"status": -1, "msg": 'str(e)'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
