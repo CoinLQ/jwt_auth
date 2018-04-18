@@ -12,7 +12,6 @@ JWT_AUTH = {
 
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 
-
 DEFAULTS = {
     'JWT_ENCODE_HANDLER':
     'rest_framework_jwt.utils.jwt_encode_handler',

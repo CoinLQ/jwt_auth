@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from .models import Staff
+from .models import Staff, EmailVerifycode
 from django.utils import timezone
 import jwt
 import pytz
@@ -11,8 +11,8 @@ from rest_framework.response import Response
 from calendar import timegm
 from datetime import datetime, timedelta
 from django.utils.translation import ugettext as _
-from .settings import api_settings
-
+from .settings import api_settings 
+from jwt_auth.utils.email_send import send_verifycode_email
 
 class PasswordField(serializers.CharField):
 
@@ -99,7 +99,7 @@ class StaffSerializer(serializers.ModelSerializer):
         response = requests.post(url, data=data)
         resDic = json.loads(response.text)
         return resDic
-
+    
 class JSONWebTokenSerializer(serializers.Serializer):
     """
     Serializer class used to validate a username and password.
@@ -254,3 +254,14 @@ class RefreshJSONWebTokenSerializer(VerificationBaseSerializer):
             'token': jwt_encode_handler(new_payload),
             'user': user
         }
+
+class EmailVerifycodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailVerifycode
+        fields = '__all__'
+    def create(self, validated_data):
+        email = validated_data['email']
+        send_status = send_verifycode_email(email=validated_data['email'], send_type="forget")
+        emailVerifycode = EmailVerifycode.objects.get(email=email)
+        return emailVerifycode
+
