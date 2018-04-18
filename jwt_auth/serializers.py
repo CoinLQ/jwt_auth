@@ -125,7 +125,12 @@ class JSONWebTokenSerializer(serializers.Serializer):
 
     def authenticate(self, username=None, password=None, **kwargs):
         try:
-            user = Staff.objects.get(email=username)
+            
+            try:
+                user = Staff.objects.get(email=username)
+            except Exception as e:
+                user = Staff.objects.get(username=username)
+            print('username:',username)
             if user.check_password(password):
                 return user
         except Exception as e:
