@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
 from django.core.mail import send_mail
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, PermissionsMixin
 from django.contrib.postgres.fields import JSONField
 from functools import reduce
 from django.db.models.signals import post_save
@@ -74,7 +74,7 @@ class Resource(models.Model):
         verbose_name_plural = verbose_name = u'资源'
 
 
-class Staff(AbstractBaseUser):
+class Staff(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(u"用户名", max_length=24, default="")
     email = models.EmailField(u"邮件", max_length=255, unique=True, db_index=True)
     is_active = models.BooleanField("是否激活", default=True)
@@ -101,13 +101,6 @@ class Staff(AbstractBaseUser):
         if not menus:
             return []
         return list(set(reduce(lambda x, y: x + y, menus)))
-
-    def has_module_perms(self, demo):
-        return True
-
-
-    def has_perm(self, perm, obj=None):
-        return True
 
     def email_user(self, subject, message, from_email=None):
         """
