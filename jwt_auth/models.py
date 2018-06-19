@@ -77,7 +77,7 @@ class Resource(models.Model):
 class Staff(AbstractBaseUser):
     username = models.CharField(u"用户名", max_length=24, default="")
     email = models.EmailField(u"邮件", max_length=255, unique=True, db_index=True)
-    is_active = models.BooleanField("是否激活", default=True)
+    is_active = models.BooleanField("是否激活", default=False)
     is_superuser = models.BooleanField("是否是超级用户", default=False)
     is_admin = models.BooleanField("是否管理员", default=False)
     introduce_by = models.CharField(u"推荐由", max_length=64, default="", blank=True)
@@ -163,16 +163,3 @@ class Permission(models.Model):
     class Meta:
         verbose_name_plural = verbose_name = u'权限'
 
-
-class EmailVerifycode(models.Model):
-    # 验证码
-    code = models.CharField(max_length=20, verbose_name=u"验证码")
-    email = models.EmailField(max_length=50, verbose_name=u"邮箱")
-    # 包含注册验证和找回验证
-    send_type = models.CharField(verbose_name=u"验证码类型", max_length=10, choices=(("register",u"注册"), ("forget",u"找回密码")))
-    send_time = models.DateTimeField(verbose_name=u"发送时间", default=timezone.now)
-    class Meta:
-        verbose_name = u"邮箱验证码"
-        verbose_name_plural = verbose_name
-    def __unicode__(self):
-        return '{0}({1})'.format(self.code, self.email)
