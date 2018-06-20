@@ -146,7 +146,10 @@ class JSONWebTokenSerializer(serializers.Serializer):
 
             if user:
                 if not user.is_active:
-                    msg = _('User account is disabled.')
+                    if not user.last_login:
+                        msg = _('User inactive or deleted.')
+                    else:
+                        msg = _('User account is disabled.')
                     raise serializers.ValidationError(msg)
 
                 payload = jwt_payload_handler(user)
