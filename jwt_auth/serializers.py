@@ -12,7 +12,7 @@ from calendar import timegm
 from datetime import datetime, timedelta
 from django.utils.translation import ugettext as _
 from .settings import api_settings 
-from TripitakaPlatform import email_send
+
 
 class PasswordField(serializers.CharField):
 
