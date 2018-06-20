@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from rest_framework import serializers
-from .models import Staff, EmailVerifycode
+from .models import Staff
 from django.utils import timezone
 import jwt
 import pytz
@@ -12,7 +12,7 @@ from calendar import timegm
 from datetime import datetime, timedelta
 from django.utils.translation import ugettext as _
 from .settings import api_settings 
-from jwt_auth.utils.email_send import send_verifycode_email
+
 
 class PasswordField(serializers.CharField):
 
@@ -146,7 +146,10 @@ class JSONWebTokenSerializer(serializers.Serializer):
 
             if user:
                 if not user.is_active:
-                    msg = _('User account is disabled.')
+                    if not user.last_login:
+                        msg = _('User inactive or deleted.')
+                    else:
+                        msg = _('User account is disabled.')
                     raise serializers.ValidationError(msg)
 
                 payload = jwt_payload_handler(user)
@@ -259,13 +262,4 @@ class RefreshJSONWebTokenSerializer(VerificationBaseSerializer):
             'user': user
         }
 
-class EmailVerifycodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EmailVerifycode
-        fields = '__all__'
-    def create(self, validated_data):
-        email = validated_data['email']
-        send_status = send_verifycode_email(email=validated_data['email'], send_type="forget")
-        emailVerifycode = EmailVerifycode.objects.get(email=email)
-        return emailVerifycode
 

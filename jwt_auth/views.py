@@ -1,14 +1,13 @@
 from rest_framework import viewsets, permissions, mixins, generics
-from .models import Staff,EmailVerifycode
+from .models import Staff
 from .permissions import IndenticalUserOrReadOnly
 from . import permissions as user_permissions
-from .serializers import StaffSerializer, JSONWebTokenSerializer, RefreshJSONWebTokenSerializer,EmailVerifycodeSerializer
+from .serializers import StaffSerializer, JSONWebTokenSerializer, RefreshJSONWebTokenSerializer
 from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import list_route
-# from utils import email_send
-
+from tdata.models import EmailVerifycode
 class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Staff.objects.all()
     permission_classes = (permissions.AllowAny, )
@@ -73,16 +72,6 @@ class RefreshJSONWebToken(JSONWebTokenAPIView):
     """
     serializer_class = RefreshJSONWebTokenSerializer
 
-class EmailVerifycodeView(mixins.CreateModelMixin, generics.GenericAPIView):
-    queryset = EmailVerifycode.objects.all()
-    permission_classes = (permissions.AllowAny, )
-    serializer_class = EmailVerifycodeSerializer
-
-    def post(self, request, *args, **kwargs):
-        try:
-            return self.create(request, *args, **kwargs)
-        except Exception as e:
-            return Response({"status": -1, "msg": str(e)}, status=status.HTTP_406_NOT_ACCEPTABLE)
     
 class ResetStaffView(mixins.CreateModelMixin,mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = Staff.objects.all()
@@ -106,7 +95,6 @@ class ResetStaffView(mixins.CreateModelMixin,mixins.UpdateModelMixin, generics.G
 register_user = CreateStaffView.as_view()
 obtain_jwt_token = ObtainJSONWebToken.as_view()
 refresh_jwt_token = RefreshJSONWebToken.as_view()
-email_vericode = EmailVerifycodeView.as_view()
 reset_password = ResetStaffView.as_view()
 
 
