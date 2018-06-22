@@ -7,7 +7,7 @@ from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import list_route
-from tdata.models import EmailVerifycode
+
 class CreateStaffView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Staff.objects.all()
     permission_classes = (permissions.AllowAny, )
@@ -72,29 +72,10 @@ class RefreshJSONWebToken(JSONWebTokenAPIView):
     """
     serializer_class = RefreshJSONWebTokenSerializer
 
-    
-class ResetStaffView(mixins.CreateModelMixin,mixins.UpdateModelMixin, generics.GenericAPIView):
-    queryset = Staff.objects.all()
-    permission_classes = (permissions.AllowAny, )
-    serializer_class = StaffSerializer 
-
-    def put(self, request, *args, **kwargs):
-        params = request.data
-        email, verify_code, password = params['email'], params['vericode'], params['password']
-        codes = EmailVerifycode.objects.filter(email=email, code=verify_code)
-        if len(codes) > 0:
-            codes.delete()
-            staff = Staff.objects.get(email=email)
-            staff.set_password(password)
-            staff.save()
-            return Response({'status':0, 'msg':'成功'})
-        else:
-            return Response({'status':'-1', 'msg':'验证码错误'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-        
 
 register_user = CreateStaffView.as_view()
 obtain_jwt_token = ObtainJSONWebToken.as_view()
 refresh_jwt_token = RefreshJSONWebToken.as_view()
-reset_password = ResetStaffView.as_view()
+
 
 
