@@ -169,7 +169,7 @@ class Staff(AbstractBaseUser, MyPermissionsMixin):
         return self.is_superuser
 
     def __str__(self):
-        return self.email
+        return self.username
 
     @property
     def menus(self):
