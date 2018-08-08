@@ -81,14 +81,18 @@ class StaffSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        resDic = self.register_discourse(validated_data)
-        if resDic['success'] == True:
-            staff = Staff(email=validated_data['email'], username=validated_data['username'])
-            staff.set_password(validated_data['password'])
-            staff.save()
-            return staff
-        else:
-            raise  Exception(resDic['message'])
+        staff = Staff(email=validated_data['email'], username=validated_data['username'])
+        staff.set_password(validated_data['password'])
+        staff.save()
+        return staff
+        # resDic = self.register_discourse(validated_data)
+        # if resDic['success'] == True:
+        #     staff = Staff(email=validated_data['email'], username=validated_data['username'])
+        #     staff.set_password(validated_data['password'])
+        #     staff.save()
+        #     return staff
+        # else:
+        #     raise  Exception(resDic['message'])
 
     def register_discourse(self,data):
         import requests
