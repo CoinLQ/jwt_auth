@@ -51,7 +51,7 @@ class StaffAdmin(BaseUserAdmin):
     list_display = ('email', 'is_admin')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'username', 'password')}),
+        (None, {'fields': ('email', 'username','nickname', 'password')}),
         ('Personal info', {'fields': ('last_login',)}),
         ('Permissions', {'fields': ('is_admin', 'roles')}),
     )
