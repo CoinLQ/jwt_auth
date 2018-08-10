@@ -153,6 +153,7 @@ class MyPermissionsMixin(models.Model):
 
 class Staff(AbstractBaseUser, MyPermissionsMixin):
     username = models.CharField(u"用户名", max_length=24, unique=True, db_index=True, default="")
+    nickname = models.CharField(u"真实姓名", max_length=24, default="")
     email = models.EmailField(u"邮件", max_length=255, unique=True, db_index=True)
     is_active = models.BooleanField("是否激活", default=False)
     is_superuser = models.BooleanField("是否是超级用户", default=False)
