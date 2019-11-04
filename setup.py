@@ -11,6 +11,6 @@ setup(name='jwt_auth',
       #download_url = 'https://github.com/CoinLQ/jwt_auth/archive/master.zip',
       install_requires=[
             'djangorestframework-jwt==1.11.0',
-            'djangorestframework==3.7.3',
+            'djangorestframework==3.9.1',
       ],
       zip_safe=True)
